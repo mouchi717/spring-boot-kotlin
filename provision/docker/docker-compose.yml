@@ -1,0 +1,14 @@
+version: '2'
+services:
+
+  mysql:
+    container_name: mysql
+    build: mysql
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_ROOT_PASSWORD: "root"
+    volumes:
+      - "./mysql/scripts:/docker-entrypoint-initdb.d"
+      - ./:/provision/docker:ro # ro=read only
+    ports:
+      - "3306:3306"
