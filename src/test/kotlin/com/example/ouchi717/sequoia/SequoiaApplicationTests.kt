@@ -1,4 +1,4 @@
-package jp.ouchi717.sequoia
+package com.example.ouchi717.sequoia
 
 import org.junit.Test
 import org.junit.runner.RunWith
