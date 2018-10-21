@@ -23,14 +23,14 @@ class TaskService(@Autowired var taskRepository: TaskRepository) {
     /**
      * タスクをすべて検索します.
      */
-    fun selectTasks(): List<TaskDto> {
+    fun selectAllTasks(): List<TaskDto> {
         return taskRepository.findAll().map {
             TaskDto(it.taskId, it.userId, it.content, it.doneFlg)
         }
     }
 
     /**
-     * タスクを完了します.
+     * 指定したタスクを完了します.
      *
      * @param taskId タスクID
      */
@@ -42,7 +42,17 @@ class TaskService(@Autowired var taskRepository: TaskRepository) {
     }
 
     /**
-     * タスクを未完了にします.
+     * タスクをすべて完了します.
+     */
+    @Transactional(rollbackOn = [Exception::class])
+    fun doneAllTasks() {
+        val tasks: List<Task> = taskRepository.findAll()
+        tasks.forEach{ it -> it.done() }
+        taskRepository.save(tasks)
+    }
+
+    /**
+     * 指定したタスクを未完了にします.
      *
      * @param taskId タスクID
      */
@@ -54,13 +64,32 @@ class TaskService(@Autowired var taskRepository: TaskRepository) {
     }
 
     /**
-     * タスクを削除にします.
+     * タスクをすべて未完了します.
+     */
+    @Transactional(rollbackOn = [Exception::class])
+    fun undoneAllTasks() {
+        val tasks: List<Task> = taskRepository.findAll()
+        tasks.forEach{ it -> it.undone() }
+        taskRepository.save(tasks)
+    }
+
+    /**
+     * 指定したタスクを削除します.
      *
      * @param taskId タスクID
      */
     @Transactional(rollbackOn = [Exception::class])
     fun deleteTask(taskId: Long) {
         taskRepository.delete(findTask(taskId))
+    }
+
+    /**
+     * 完了したタスクをすべて削除します.
+     */
+    @Transactional(rollbackOn = [Exception::class])
+    fun deleteDoneTasks() {
+        val doneTasks = taskRepository.findByDoneFlgTrue()
+        taskRepository.delete(doneTasks)
     }
 
     /**

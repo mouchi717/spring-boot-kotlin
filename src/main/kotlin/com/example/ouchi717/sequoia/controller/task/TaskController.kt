@@ -37,7 +37,7 @@ class TaskController(@Autowired var taskService: TaskService) {
      */
     @GetMapping
     fun searchTasks(): ResponseEntity<List<TaskDto>> {
-        val tasks: List<TaskDto> = taskService.selectTasks()
+        val tasks: List<TaskDto> = taskService.selectAllTasks()
         return ResponseEntity(tasks, HttpStatus.OK)
     }
 
@@ -51,11 +51,29 @@ class TaskController(@Autowired var taskService: TaskService) {
     }
 
     /**
+     * タスクをすべて完了する.
+     */
+    @PutMapping("/done")
+    fun doneAllTaska(): ResponseEntity<Nothing> {
+        taskService.doneAllTasks()
+        return ResponseEntity.noContent().build()
+    }
+
+    /**
      * タスクを未完了にする.
      */
     @PutMapping("/{taskId}/undone")
     fun undoneTask(@PathVariable taskId: Long): ResponseEntity<Nothing> {
         taskService.undoneTask(taskId)
+        return ResponseEntity.noContent().build()
+    }
+
+    /**
+     * タスクをすべて未完了する.
+     */
+    @PutMapping("/undone")
+    fun undoneAllTaska(): ResponseEntity<Nothing> {
+        taskService.undoneAllTasks()
         return ResponseEntity.noContent().build()
     }
 }

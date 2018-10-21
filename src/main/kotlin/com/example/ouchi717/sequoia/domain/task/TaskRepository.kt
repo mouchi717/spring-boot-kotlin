@@ -7,4 +7,9 @@ import org.springframework.stereotype.Repository
  * The repository of the Task table.
  */
 @Repository
-interface TaskRepository: JpaRepository<Task, Long>
+interface TaskRepository: JpaRepository<Task, Long> {
+
+    fun findByDoneFlgFalse(): List<Task>
+
+    fun findByDoneFlgTrue(): List<Task>
+}
